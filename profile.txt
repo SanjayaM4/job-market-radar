@@ -1,0 +1,21 @@
+Software developer targeting Software Developer / Software Engineer roles, particularly
+backend, full-stack, and Python-based positions.
+
+Skills: Python, C, C++, C#, Java, SQL, JavaScript, HTML, CSS. Experience with Pandas,
+Scikit-learn, Streamlit, Selenium, and PyAutoGUI. Familiar with Git, GitHub, Linux,
+VS Code, MySQL, PostgreSQL, Docker, FastAPI, React, and CI/CD with GitHub Actions.
+
+Experience: QA automation and test automation using Python, Selenium, and PyAutoGUI;
+functional, regression, and accessibility testing on web applications; bug tracking
+and test case management in Jira.
+
+Projects: built a content-based recommendation engine using TF-IDF and cosine
+similarity over a large game dataset, with a Bayesian weighted rating system and a
+deployed Streamlit application; built a Discord bot with asynchronous audio
+streaming; designed a relational database and PHP web interface for a ticket
+reservation system; led a data analysis project on survey data using Pandas and
+Matplotlib; built and deployed a 2D game using Unity and C#.
+
+Currently a Computer Science co-op student seeking software developer / software
+engineer internship or new-grad roles, particularly in backend and full-stack web
+development.
