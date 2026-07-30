@@ -21,5 +21,66 @@ services:
     ports:
       - "6379:6379"
 
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: job_radar_api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # inside the docker network, containers reach each other by service
+      # name, not "localhost" - these override whatever .env has locally
+      DATABASE_URL: postgresql://jobradar:jobradar@postgres:5432/job_radar
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: job_radar_worker
+    restart: unless-stopped
+    # no --pool=solo needed here - that was only a Windows workaround;
+    # this container runs Linux, so Celery's default pool works fine
+    command: celery -A backend.app.celery_app worker --loglevel=info
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://jobradar:jobradar@postgres:5432/job_radar
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+
+  beat:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: job_radar_beat
+    restart: unless-stopped
+    command: celery -A backend.app.celery_app beat --loglevel=info
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://jobradar:jobradar@postgres:5432/job_radar
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: job_radar_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
 volumes:
   postgres_data:
