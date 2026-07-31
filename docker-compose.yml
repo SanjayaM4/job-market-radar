@@ -29,8 +29,6 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      # inside the docker network, containers reach each other by service
-      # name, not "localhost" - these override whatever .env has locally
       DATABASE_URL: postgresql://jobradar:jobradar@postgres:5432/job_radar
       REDIS_URL: redis://redis:6379/0
     ports:
@@ -45,8 +43,6 @@ services:
       dockerfile: backend/Dockerfile
     container_name: job_radar_worker
     restart: unless-stopped
-    # no --pool=solo needed here - that was only a Windows workaround;
-    # this container runs Linux, so Celery's default pool works fine
     command: celery -A backend.app.celery_app worker --loglevel=info
     env_file: .env
     environment:
@@ -75,6 +71,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        # comes from the root .env - docker-compose substitutes ${...} in
+        # this file itself, separate from the env_file: used by containers
+        VITE_API_BASE: ${VITE_API_BASE}
     container_name: job_radar_frontend
     restart: unless-stopped
     ports:
