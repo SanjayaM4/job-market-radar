@@ -1,3 +1,5 @@
+![CI](https://github.com/SanjayaM4/job-market-radar/actions/workflows/ci.yml/badge.svg)
+
 # Smart Job Market Radar & Application Tracker
 
 Self-hosted system that monitors job board APIs, scores postings against your
