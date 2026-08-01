@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchApplications, updateApplicationStatus } from "../api";
+import { fetchApplications, updateApplicationStatus, deleteApplication } from "../api";
 
 const STATUSES = ["saved", "applied", "interview", "offer", "rejected"];
 
@@ -23,6 +23,12 @@ export default function PipelineBoard() {
     loadApplications();
   }
 
+  async function handleRemove(applicationId, title) {
+    if (!window.confirm(`Remove "${title}" from your pipeline?`)) return;
+    await deleteApplication(applicationId);
+    loadApplications();
+  }
+
   if (loading) return <p className="p-4 text-gray-500">Loading pipeline...</p>;
 
   return (
@@ -34,8 +40,15 @@ export default function PipelineBoard() {
             {applications
               .filter((app) => app.status === status)
               .map((app) => (
-                <div key={app.id} className="bg-white border rounded p-2 text-sm">
-                  <p className="font-medium">{app.posting.title}</p>
+                <div key={app.id} className="bg-white border rounded p-2 text-sm relative">
+                  <button
+                    onClick={() => handleRemove(app.id, app.posting.title)}
+                    title="Remove from pipeline"
+                    className="absolute top-1 right-1 text-gray-400 hover:text-red-600 text-xs leading-none w-4 h-4 flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                  <p className="font-medium pr-4">{app.posting.title}</p>
                   <p className="text-gray-500 text-xs mb-2">{app.posting.company}</p>
                   <select
                     value={app.status}

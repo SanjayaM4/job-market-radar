@@ -31,3 +31,10 @@ export async function updateApplicationStatus(applicationId, status) {
   if (!res.ok) throw new Error("Failed to update application");
   return res.json();
 }
+
+export async function deleteApplication(applicationId) {
+  const res = await fetch(`${API_BASE}/applications/${applicationId}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Failed to remove application");
+}
