@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -5,10 +7,12 @@ from backend.app.routers import postings, applications
 
 app = FastAPI(title="Smart Job Market Radar", version="0.1.0")
 
-# Allows the React dev server (Vite, port 5173) to call this API from the browser.
+_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173")
+allow_origins = [origin.strip() for origin in _origins_env.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=allow_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000";
 
 export async function fetchPostings(minScore = 0) {
   const res = await fetch(`${API_BASE}/postings/?min_score=${minScore}&limit=100`);

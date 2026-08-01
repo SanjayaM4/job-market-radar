@@ -2,17 +2,20 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
-# Passed in from docker-compose.yml's build.args, sourced from the root .env
 ARG VITE_API_BASE
-ENV VITE_API_BASE=$VITE_API_BASE
 
 COPY package*.json ./
 RUN npm install
 COPY . .
+
+# Write the build-time API URL into a real Vite env file - this is Vite's
+# officially documented env-loading mechanism, more reliable than relying
+# on a plain container ENV var being picked up during the build.
+RUN echo "VITE_API_BASE=${VITE_API_BASE}" > .env.production
+
 RUN npm run build
 
-# Serve stage - the build output is static files, so a full Node runtime
-# isn't needed to serve them, just a lightweight web server.
+# Serve stage
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
